@@ -36,8 +36,6 @@ services:
     volumes:
       - ./nodejs:/usr/src/app
     tty: true
-  #
-  #      - db
 
   nginx:
     build:
