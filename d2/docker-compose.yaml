@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: db
+    hostname: db
+    restart: always
+    tty: true
+    environment:
+      - MYSQL_DATABASE=desafiodb
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - desafio-network
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$root --password=$$root
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 55
+
+  nodejs:
+    build:
+      context: nodejs
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    image: chgv/nodejs
+    container_name: nodejs
+    hostname: nodejs
+
+    networks:
+      - desafio-network
+    volumes:
+      - ./nodejs:/usr/src/app
+    tty: true
+  #
+  #      - db
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: chgv/nginx
+    container_name: nginx
+    hostname: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    ports:
+      - "8090:80"
+    depends_on:
+      - nodejs
+    networks:
+      - desafio-network
+
+networks:
+  desafio-network:
+    driver: bridge
+
+# docker-compose up -d --build
