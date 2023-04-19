@@ -30,11 +30,8 @@ services:
     image: chgv/nodejs
     container_name: nodejs
     hostname: nodejs
-
     networks:
       - desafio-network
-    volumes:
-      - ./nodejs:/usr/src/app
     tty: true
 
   nginx:

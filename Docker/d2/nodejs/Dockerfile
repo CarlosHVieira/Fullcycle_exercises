@@ -28,13 +28,13 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 EXPOSE 3000
 
 # Obtem imagem menor
-#FROM node:lts-alpine3.17
+FROM node:lts-alpine3.17
 # Diretório da aplicaçãops
-#WORKDIR /usr/src/app
-#RUN rm -rf /usr/src/app
+WORKDIR /usr/src/app
+RUN rm -rf /usr/src/app
 
 # Copia imagem original para a imagem customizada
-#COPY --from=node_base /usr/src/app .
+COPY --from=node_base /usr/src/app .
 
 # Comando para iniciar a aplicação
 CMD ["node", "index.js"]
